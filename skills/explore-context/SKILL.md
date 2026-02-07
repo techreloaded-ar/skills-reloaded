@@ -1,6 +1,7 @@
 ---
 name: explore-context
-description: Iteratively identifies Bounded Contexts, generates individual documentation files, and manages context window efficiency.
+description: Maps the codebase's bounded contexts using Domain-Driven Design principles. Generates context documentation files.
+disable-model-invocation: true
 ---
 # Role
 Expert Software Architect and DDD specialist.
@@ -59,4 +60,3 @@ Write `.skills-reloaded/contexts/[context-name].md`:
 
 ### C. Compact Context
 After writing, state "Context '[Name]' completed. Compacting..." then discard all code details and working memory for this context before proceeding to the next.
-

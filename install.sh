@@ -2,12 +2,12 @@
 set -euo pipefail
 
 # ─── Skills Reloaded Installer ────────────────────────────────────────────────
-# Installs skills-reloaded commands for Claude Code, Codex, Gemini CLI, OpenCode
-# Usage: curl -fsSL https://raw.githubusercontent.com/Smarello/skills-reloaded/main/install.sh | bash
+# Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode
+# Usage: curl -fsSL https://raw.githubusercontent.com/sleli/skills-reloaded/main/install.sh | bash
 # ──────────────────────────────────────────────────────────────────────────────
 
-REPO_BASE="https://raw.githubusercontent.com/Smarello/skills-reloaded/main/skills-reloaded"
-FILES=("explore-context.md" "create-skills.md" "create-agents.md" "update-skills.md")
+REPO_BASE="https://raw.githubusercontent.com/sleli/skills-reloaded/main"
+SKILL_NAMES=("explore-context" "create-skills" "create-agents")
 
 # ─── Colors ───────────────────────────────────────────────────────────────────
 BOLD='\033[1m'
@@ -20,8 +20,13 @@ RESET='\033[0m'
 
 # ─── Tool definitions ────────────────────────────────────────────────────────
 TOOL_NAMES=("Claude Code" "Codex" "Gemini CLI" "OpenCode")
-TOOL_PATHS=("$HOME/.claude/commands" "$HOME/.codex/prompts" "$HOME/.gemini/commands" "$HOME/.config/opencode/commands")
+TOOL_PATHS=(".claude/skills" ".agents/skills" ".gemini/skills" ".opencode/skills")
 TOOL_COUNT=${#TOOL_NAMES[@]}
+
+# ─── Legacy paths for cleanup ────────────────────────────────────────────────
+OLD_TOOL_PATHS=(".claude/commands" ".codex/prompts" ".gemini/commands" ".config/opencode/commands")
+OLD_EXTENSIONS=("md" "md" "toml" "md")
+OLD_NAMES=("explore-context" "create-skills" "create-agents" "update-skills")
 
 # ─── Cleanup ──────────────────────────────────────────────────────────────────
 TMPDIR_INSTALL=""
@@ -30,100 +35,48 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# ─── Frontmatter parser ──────────────────────────────────────────────────────
-# Sets: FM_NAME, FM_DESC, FM_BODY
-parse_frontmatter() {
-  local file="$1"
-  FM_NAME=""
-  FM_DESC=""
-  FM_BODY=""
-
-  local first_line
-  first_line=$(head -n 1 "$file")
-
-  if [[ "$first_line" == "---" ]]; then
-    # Has frontmatter — use awk to split header and body
-    local header
-    header=$(awk 'NR==1{next} /^---$/{exit} {print}' "$file")
-    FM_BODY=$(awk 'BEGIN{found=0} /^---$/{found++; if(found==2){skip=1; next}} skip{print}' "$file")
-
-    while IFS= read -r line; do
-      if [[ "$line" =~ ^name:[[:space:]]*(.*) ]]; then
-        FM_NAME="${BASH_REMATCH[1]}"
-      elif [[ "$line" =~ ^description:[[:space:]]*(.*) ]]; then
-        FM_DESC="${BASH_REMATCH[1]}"
-      fi
-    done <<< "$header"
-  else
-    # No frontmatter — derive name from filename, description from first heading
-    FM_NAME=$(basename "$file" .md)
-
-    while IFS= read -r line; do
-      if [[ "$line" =~ ^#[[:space:]]+(.*) ]]; then
-        FM_DESC="${BASH_REMATCH[1]}"
-        break
-      fi
-    done < "$file"
-
-    FM_BODY=$(<"$file")
-  fi
-}
-
-# ─── TOML converter ──────────────────────────────────────────────────────────
-to_toml() {
-  local desc="$1"
-  local body="$2"
-
-  # Escape backslashes and triple quotes in body
-  body="${body//\\/\\\\}"
-  body="${body//\"\"\"/\"\"\\\"}"
-
-  # Escape backslashes in description, then escape double quotes
-  desc="${desc//\\/\\\\}"
-  desc="${desc//\"/\\\"}"
-
-  printf 'description = "%s"\n\nprompt = """\n%s\n"""\n' "$desc" "$body"
-}
-
 # ─── Install for a specific tool ─────────────────────────────────────────────
 install_for_tool() {
   local tool_index="$1"
   local tool_name="${TOOL_NAMES[$tool_index]}"
   local tool_path="${TOOL_PATHS[$tool_index]}"
 
-  mkdir -p "$tool_path"
-
-  local installed=()
-
-  for file in "${FILES[@]}"; do
-    local src="$TMPDIR_INSTALL/$file"
-    local cmd_name
-    cmd_name=$(basename "$file" .md)
-
-    parse_frontmatter "$src"
-
-    case "$tool_index" in
-      0) # Claude Code — copy verbatim
-        cp "$src" "$tool_path/$file"
-        installed+=("$file")
-        ;;
-      1|3) # Codex / OpenCode — strip frontmatter, write body as .md
-        printf '%s\n' "$FM_BODY" > "$tool_path/$file"
-        installed+=("$file")
-        ;;
-      2) # Gemini CLI — convert to .toml
-        local toml_file="${cmd_name}.toml"
-        to_toml "$FM_DESC" "$FM_BODY" > "$tool_path/$toml_file"
-        installed+=("$toml_file")
-        ;;
-    esac
+  for skill_name in "${SKILL_NAMES[@]}"; do
+    local dest_dir="$tool_path/$skill_name"
+    mkdir -p "$dest_dir"
+    cp "$TMPDIR_INSTALL/$skill_name/SKILL.md" "$dest_dir/SKILL.md"
   done
 
   echo ""
   printf "  ${GREEN}✓${RESET} ${BOLD}%s${RESET} ${DIM}→ %s${RESET}\n" "$tool_name" "$tool_path"
-  for f in "${installed[@]}"; do
-    printf "    ${DIM}%s${RESET}\n" "$f"
+  for skill_name in "${SKILL_NAMES[@]}"; do
+    printf "    ${DIM}%s/SKILL.md${RESET}\n" "$skill_name"
   done
+}
+
+# ─── Remove legacy files ─────────────────────────────────────────────────────
+cleanup_legacy() {
+  local tool_index="$1"
+  local old_path="${OLD_TOOL_PATHS[$tool_index]}"
+  local ext="${OLD_EXTENSIONS[$tool_index]}"
+  local removed=0
+
+  for old_name in "${OLD_NAMES[@]}"; do
+    local old_file="$old_path/$old_name.$ext"
+    if [[ -f "$old_file" ]]; then
+      rm "$old_file"
+      ((removed++))
+    fi
+  done
+
+  # Remove directory if empty (don't delete user's other files)
+  if [[ -d "$old_path" ]] && [[ -z "$(ls -A "$old_path" 2>/dev/null)" ]]; then
+    rmdir "$old_path"
+  fi
+
+  if [[ $removed -gt 0 ]]; then
+    printf "  ${DIM}Cleaned up %d legacy file(s) from %s${RESET}\n" "$removed" "$old_path"
+  fi
 }
 
 # ─── Interactive multi-select menu ────────────────────────────────────────────
@@ -155,7 +108,7 @@ interactive_menu() {
   draw_menu() {
     # Move cursor up to redraw (except first draw)
     if [[ "${1:-}" == "redraw" ]]; then
-      printf "\033[%dA" "$((TOOL_COUNT + 1))"
+      printf "\033[%dA" "$TOOL_COUNT"
     fi
 
     for ((i = 0; i < TOOL_COUNT; i++)); do
@@ -249,7 +202,7 @@ fallback_menu() {
 main() {
   echo ""
   printf "${BOLD}${CYAN}  Skills Reloaded Installer${RESET}\n"
-  printf "${DIM}  Install AI coding commands for your tools${RESET}\n"
+  printf "${DIM}  Install AI coding skills for your tools${RESET}\n"
   echo ""
 
   # Check for curl or wget
@@ -266,21 +219,23 @@ main() {
   # Create temp directory
   TMPDIR_INSTALL=$(mktemp -d)
 
-  # Download files
-  printf "${DIM}  Downloading commands...${RESET}\n"
+  # Download skills
+  printf "${DIM}  Downloading skills...${RESET}\n"
   local download_failed=0
-  for file in "${FILES[@]}"; do
-    local url="$REPO_BASE/$file"
-    local dest="$TMPDIR_INSTALL/$file"
+  for skill_name in "${SKILL_NAMES[@]}"; do
+    local url="$REPO_BASE/skills/$skill_name/SKILL.md"
+    local dest_dir="$TMPDIR_INSTALL/$skill_name"
+    mkdir -p "$dest_dir"
+    local dest="$dest_dir/SKILL.md"
 
     if [[ "$downloader" == "curl" ]]; then
       if ! curl -fsSL "$url" -o "$dest" 2>/dev/null; then
-        printf "  ${RED}✗${RESET} Failed to download %s\n" "$file"
+        printf "  ${RED}✗${RESET} Failed to download %s\n" "$skill_name"
         download_failed=1
       fi
     else
       if ! wget -q "$url" -O "$dest" 2>/dev/null; then
-        printf "  ${RED}✗${RESET} Failed to download %s\n" "$file"
+        printf "  ${RED}✗${RESET} Failed to download %s\n" "$skill_name"
         download_failed=1
       fi
     fi
@@ -291,7 +246,7 @@ main() {
     exit 1
   fi
 
-  printf "  ${GREEN}✓${RESET} Downloaded %d commands\n" "${#FILES[@]}"
+  printf "  ${GREEN}✓${RESET} Downloaded %d skills\n" "${#SKILL_NAMES[@]}"
   echo ""
 
   # Tool selection
@@ -307,11 +262,12 @@ main() {
   printf "${BOLD}  Installing...${RESET}\n"
   for tool_index in "${SELECTED_TOOLS[@]}"; do
     install_for_tool "$tool_index"
+    cleanup_legacy "$tool_index"
   done
 
   # Summary
   echo ""
-  printf "${GREEN}${BOLD}  Done!${RESET} Installed ${#FILES[@]} commands for ${#SELECTED_TOOLS[@]} tool(s).\n"
+  printf "${GREEN}${BOLD}  Done!${RESET} Installed %d skills for %d tool(s).\n" "${#SKILL_NAMES[@]}" "${#SELECTED_TOOLS[@]}"
   echo ""
 }
 

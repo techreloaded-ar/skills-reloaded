@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The framework operates through a **three-phase workflow**:
 
-### Phase 1: Context Discovery (`explore-context` command)
+### Phase 1: Context Discovery (`explore-context` skill)
 - **Purpose**: Maps the codebase into Bounded Contexts using Domain-Driven Design principles
 - **Output Location**: `.skills-reloaded/contexts/`
 - **Process**:
@@ -19,7 +19,7 @@ The framework operates through a **three-phase workflow**:
   3. Generates one `.md` file per context with location, description, key folders/files, and domain rules
 - **Memory Management**: Uses compaction strategy — after documenting each context, discards code details before processing the next to avoid token overflow
 
-### Phase 2: Skill Generation (`create-skills` command)
+### Phase 2: Skill Generation (`create-skills` skill)
 - **Purpose**: Transforms context documentation into executable skill files
 - **Input**: Reads from `.skills-reloaded/contexts/*.md` (excluding `TECHNICAL-AREAS.md`)
 - **Output Location**: `.skills-reloaded/skills/<context-name>/SKILL.md`
@@ -32,7 +32,7 @@ The framework operates through a **three-phase workflow**:
   - Frontmatter: `name`, `description` (must include precise trigger conditions)
   - Sections: Context, Rules, Examples, User Customizations
 
-### Phase 3: Agent Creation (`create-agents` command)
+### Phase 3: Agent Creation (`create-agents` skill)
 - **Purpose**: Builds an AI workforce with orchestrator and specialized sub-agents
 - **Prerequisite**: Requires `TECHNICAL-AREAS.md` from Phase 1
 - **Output Location**: `.skills-reloaded/agents/`
@@ -44,18 +44,10 @@ The framework operates through a **three-phase workflow**:
      - Named by professional role (e.g., `nextjs-dev.md`, not `nextjs.md`)
      - Contains role, capabilities, rules & guidelines from technical area
 
-### Maintenance (`update-skills` command)
-- **Purpose**: Validates and repairs broken file references in skill documentation
-- **Process**:
-  1. Scans all `SKILL.md` files in `.skills-reloaded/` (note: directory starts with `.`)
-  2. Extracts file paths and checks if they exist
-  3. Reports broken references and asks user for fix strategy (remove or update)
-- **Important**: Always uses `.skills-reloaded/` (with dot), never `skills-reloaded/`
-
 ## Key Design Principles
 
-1. **Iterative Processing**: All commands process items one-by-one with context compaction between iterations to manage token limits
-2. **Read Actual Code**: Commands must read actual files, not guess from filenames
+1. **Iterative Processing**: All skills process items one-by-one with context compaction between iterations to manage token limits
+2. **Read Actual Code**: Skills must read actual files, not guess from filenames
 3. **Preservation**: Skills preserve user customizations during regeneration
 4. **Separation of Concerns**:
    - Contexts = Domain knowledge
@@ -65,6 +57,18 @@ The framework operates through a **three-phase workflow**:
 
 ## Directory Structure
 
+### Source (this repo)
+```
+skills/
+├── explore-context/
+│   └── SKILL.md
+├── create-skills/
+│   └── SKILL.md
+└── create-agents/
+    └── SKILL.md
+```
+
+### Output (generated when skills run on a target codebase)
 ```
 .skills-reloaded/
 ├── contexts/           # Phase 1 output: Bounded context documentation
@@ -78,16 +82,26 @@ The framework operates through a **three-phase workflow**:
     └── [role-name].md  # Sub-agents
 ```
 
-## Command Execution Order
+### Installation paths per platform
+| Platform | Installed to |
+|---|---|
+| Claude Code | `.claude/skills/<name>/SKILL.md` |
+| Codex | `.agents/skills/<name>/SKILL.md` |
+| Gemini CLI | `.gemini/skills/<name>/SKILL.md` |
+| OpenCode | `.opencode/skills/<name>/SKILL.md` |
+
+All platforms use the same `SKILL.md` format — no conversion needed.
+
+## Skill Execution Order
 
 1. **First time setup**: `explore-context` → `create-skills` → `create-agents`
-2. **After codebase changes**: `update-skills` to validate existing documentation
-3. **Re-analysis**: Delete `.skills-reloaded/contexts/*` and re-run `explore-context`
+2. **Re-analysis**: Delete `.skills-reloaded/contexts/*` and re-run `explore-context`
 
 ## Important Gotchas
 
-- The `explore-context` command **deletes all files** in `.skills-reloaded/contexts/` before starting
+- The `explore-context` skill **deletes all files** in `.skills-reloaded/contexts/` before starting
 - Skills explicitly **exclude `TECHNICAL-AREAS.md`** from processing (it's for agent creation)
 - Directory naming: Always use `.skills-reloaded/` (with leading dot) in code, never `skills-reloaded/`
 - Agent filenames use professional roles, not technology names
 - User Customizations section in SKILL.md must never be auto-generated — only restored from existing files
+- All skills use `disable-model-invocation: true` — they are only invoked explicitly by the user

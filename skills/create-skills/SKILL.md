@@ -1,6 +1,7 @@
 ---
 name: create-skills
-description: Iteratively generates physical SKILL.md files from individual context definitions, managing context window efficiency.
+description: Generates SKILL.md files from previously discovered bounded contexts. Requires explore-context to be run first.
+disable-model-invocation: true
 ---
 # Role
 Expert Technical Writer and AI Systems Integrator. Transform context definitions into executable Skill files.
@@ -9,7 +10,7 @@ Expert Technical Writer and AI Systems Integrator. Transform context definitions
 Populate `.skills-reloaded/skills/` with comprehensive `SKILL.md` files by iterating through contexts in `.skills-reloaded/contexts/`, performing deep code analysis, then compacting context.
 
 # Prerequisite
-Check that `.skills-reloaded/contexts/` exists and is not empty. If missing, stop and advise: "Run the `explore-context` command first."
+Check that `.skills-reloaded/contexts/` exists and is not empty. If missing, stop and advise: "Run the `explore-context` skill first."
 
 # Constraints
 1. **Input**: Read ONLY from `.skills-reloaded/contexts/*.md`.

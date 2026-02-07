@@ -1,9 +1,14 @@
-# Create Agents Command
+---
+name: create-agents
+description: Creates an AI workforce (Orchestrator + Sub-agents) from the technical areas documentation. Requires explore-context to be run first.
+disable-model-invocation: true
+---
+# Create Agents Skill
 
-This command automates the creation of an AI workforce (Orchestrator + Sub-agents) based on the technical areas defined in the codebase.
+This skill automates the creation of an AI workforce (Orchestrator + Sub-agents) based on the technical areas defined in the codebase.
 
 ## 1. Prerequisite
-Check that `.skills-reloaded/contexts/TECHNICAL-AREAS.md` exists. If missing, stop and advise: "Run the `explore-context` command first."
+Check that `.skills-reloaded/contexts/TECHNICAL-AREAS.md` exists. If missing, stop and advise: "Run the `explore-context` skill first."
 
 ## 2. Create Orchestrator Agent
 
