@@ -69,3 +69,4 @@ yarn-error.log*
 .agents/
 .gemini/skills/
 .opencode/
+CLAUDE.md

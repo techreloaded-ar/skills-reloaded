@@ -7,14 +7,14 @@ disable-model-invocation: true
 Expert Technical Writer and AI Systems Integrator. Transform context definitions into executable Skill files.
 
 # Goal
-Populate `.skills-reloaded/skills/` with comprehensive `SKILL.md` files by iterating through contexts in `.skills-reloaded/contexts/`, performing deep code analysis, then compacting context.
+Populate the target skills directory with comprehensive `SKILL.md` files by iterating through contexts in `.skills-reloaded/contexts/`, performing deep code analysis, then compacting context.
 
 # Prerequisite
 Check that `.skills-reloaded/contexts/` exists and is not empty. If missing, stop and advise: "Run the `explore-context` skill first."
 
 # Constraints
 1. **Input**: Read ONLY from `.skills-reloaded/contexts/*.md`.
-2. **Output**: Create files at `.skills-reloaded/skills/<context-name>/SKILL.md`.
+2. **Output**: Create files at `{SKILLS_OUTPUT_BASE}<context-name>/SKILL.md` (one per target platform detected in Step 0).
 3. **Template**:
     ```markdown
     ---
@@ -40,12 +40,41 @@ Check that `.skills-reloaded/contexts/` exists and is not empty. If missing, sto
 
 # Instructions
 
+## Step 0: Detect Target Environment
+
+Determine where to save generated skill files by setting one or more `SKILLS_OUTPUT_BASE` paths.
+
+1. **Auto-detect**: Identify which AI coding tool you are currently running in:
+   | Environment | Skills output base |
+   |---|---|
+   | Claude Code | `.claude/skills/` |
+   | Codex | `.agents/skills/` |
+   | Gemini CLI | `.gemini/skills/` |
+   | OpenCode | `.opencode/skills/` |
+
+   If you can identify your environment → use the corresponding path and proceed to Step 1.
+
+2. **Directory check**: If unsure, check which of these directories exist in the project root: `.claude/`, `.agents/`, `.gemini/`, `.opencode/`. If exactly one exists → use the corresponding platform's skills path.
+
+3. **Ask the user**: If detection fails or multiple directories found, ask:
+   "In quale ambiente vuoi generare i file? (selezione multipla possibile)"
+   - Claude Code (`.claude/skills/`)
+   - Codex (`.agents/skills/`)
+   - Gemini CLI (`.gemini/skills/`)
+   - OpenCode (`.opencode/skills/`)
+   - Altro (`.skills-reloaded/skills/`)
+
+   If multiple selected → generate files in ALL selected directories.
+   If "Altro" selected → use `.skills-reloaded/skills/`.
+
+Store the result as the list of `SKILLS_OUTPUT_BASES` to use in subsequent steps.
+
 ## Step 1: Discovery & Planning
 1. List all markdown files in `.skills-reloaded/contexts/` (exclude `index.md`).
 2. Output the processing order.
 
 ## Step 2: The Skill Loop
-Ensure `.skills-reloaded/skills/` exists. For **EACH** context file **EXCLUDING `TECHNICAL-AREAS.md`**:
+Ensure each `SKILLS_OUTPUT_BASE` directory exists. For **EACH** context file **EXCLUDING `TECHNICAL-AREAS.md`**:
 
 ### A. Load Context
 Read `.skills-reloaded/contexts/[context-name].md`. Identify root path and key files.
@@ -57,12 +86,13 @@ Use `ls`, `read`, `search_codebase` to examine actual code. Identify:
 - **Dependencies**: What other contexts does it import?
 
 ### C. Generate Skill File
-- Create `.skills-reloaded/skills/<context-name>/` if needed.
-- If `SKILL.md` already exists, read it first and extract `## User Customizations` content.
+For each `SKILLS_OUTPUT_BASE`:
+- Create `{SKILLS_OUTPUT_BASE}<context-name>/` if needed.
+- If `SKILL.md` already exists at that path, read it first and extract `## User Customizations` content.
 - Write using the template. Restore any existing User Customizations content.
 
 ### D. Compact Context
 State "Skill '[Name]' generated. Compacting..." then discard all code details before proceeding.
 
 ## Step 3: Final Verification
-Verify all contexts have a corresponding `SKILL.md` in `.skills-reloaded/skills/`.
+Verify all contexts have a corresponding `SKILL.md` in each `SKILLS_OUTPUT_BASE` directory.

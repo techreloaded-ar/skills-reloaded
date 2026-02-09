@@ -7,12 +7,41 @@ disable-model-invocation: true
 
 This skill automates the creation of an AI workforce (Orchestrator + Sub-agents) based on the technical areas defined in the codebase.
 
+## 0. Detect Target Environment
+
+Determine where to save generated agent files by setting one or more `AGENTS_OUTPUT_BASE` paths.
+
+1. **Auto-detect**: Identify which AI coding tool you are currently running in:
+   | Environment | Agents output base |
+   |---|---|
+   | Claude Code | `.claude/agents/` |
+   | Codex | `.agents/agents/` |
+   | Gemini CLI | `.gemini/agents/` |
+   | OpenCode | `.opencode/agents/` |
+
+   If you can identify your environment → use the corresponding path and proceed to Section 1.
+
+2. **Directory check**: If unsure, check which of these directories exist in the project root: `.claude/`, `.agents/`, `.gemini/`, `.opencode/`. If exactly one exists → use the corresponding platform's agents path.
+
+3. **Ask the user**: If detection fails or multiple directories found, ask:
+   "In quale ambiente vuoi generare i file? (selezione multipla possibile)"
+   - Claude Code (`.claude/agents/`)
+   - Codex (`.agents/agents/`)
+   - Gemini CLI (`.gemini/agents/`)
+   - OpenCode (`.opencode/agents/`)
+   - Altro (`.skills-reloaded/agents/`)
+
+   If multiple selected → generate files in ALL selected directories.
+   If "Altro" selected → use `.skills-reloaded/agents/`.
+
+Store the result as the list of `AGENTS_OUTPUT_BASES` to use in subsequent sections.
+
 ## 1. Prerequisite
 Check that `.skills-reloaded/contexts/TECHNICAL-AREAS.md` exists. If missing, stop and advise: "Run the `explore-context` skill first."
 
 ## 2. Create Orchestrator Agent
 
-Create `.skills-reloaded/agents/orchestrator.md`:
+For each `AGENTS_OUTPUT_BASE`, create `{AGENTS_OUTPUT_BASE}orchestrator.md`:
 
 ````markdown
 ---
@@ -35,7 +64,7 @@ Orchestrator for the work done by the AI agents in this codebase.
 1. **Plan First**: Generate a numbered task plan before any action.
 2. **Skill-First Delegation**: For every task, explicitly list required Skills (e.g., `git`, `search`, `python-code-reviewer`).
 3. **One Step at a Time**: Execute Task 1, STOP, wait for result, validate, then proceed to Task 2.
-4. **Delegate, Don't Do**: Delegate implementation to sub-agents in `skills-reloaded/agents/`.
+4. **Delegate, Don't Do**: Delegate implementation to sub-agents in the agents directory.
 5. **Context Hygiene**: Give sub-agents only the context they need.
 
 # Workflow
@@ -94,7 +123,7 @@ Read and parse `.skills-reloaded/contexts/TECHNICAL-AREAS.md`.
 
 **For each Technical Area:**
 1. Extract all information, guidelines, and context for that area.
-2. **Filename**: Use a professional role name (e.g., `nextjs-dev.md`, NOT `nextjs.md`). Path: `.skills-reloaded/agents/[profession-name].md`.
+2. **Filename**: Use a professional role name (e.g., `nextjs-dev.md`, NOT `nextjs.md`). For each `AGENTS_OUTPUT_BASE`, create `{AGENTS_OUTPUT_BASE}[profession-name].md`.
 3. **Template**:
     ```markdown
     ---
