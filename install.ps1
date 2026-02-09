@@ -80,7 +80,7 @@ function Remove-Legacy {
 
 # ─── Interactive multi-select menu ────────────────────────────────────────────
 function Show-Menu {
-    $selected = @(1, 1, 1, 1) # all selected by default
+    $selected = @(0, 0, 0, 0) # none selected by default
     $cursor = 0
     $toolCount = $Tools.Count
 
@@ -173,17 +173,22 @@ function Show-FallbackMenu {
         Write-Host "  $($i + 1)) $($Tools[$i].Name) ($($Tools[$i].Path))"
     }
     Write-Host ""
-    $choices = Read-Host "Enter tool numbers separated by spaces (e.g. 1 2 3), or 'all'"
+    $choices = Read-Host "Enter tool numbers separated by spaces (e.g. 1 2 3), or 'all' (default: none)"
 
     $result = @()
     if ($choices -eq "all") {
         for ($i = 0; $i -lt $Tools.Count; $i++) { $result += $i }
     }
-    else {
+    elseif (-not [string]::IsNullOrWhiteSpace($choices)) {
         foreach ($c in $choices -split '\s+') {
-            $idx = [int]$c - 1
-            if ($idx -ge 0 -and $idx -lt $Tools.Count) {
-                $result += $idx
+            try {
+                $idx = [int]$c - 1
+                if ($idx -ge 0 -and $idx -lt $Tools.Count) {
+                    $result += $idx
+                }
+            }
+            catch {
+                # Ignore invalid input
             }
         }
     }
