@@ -3,10 +3,10 @@ set -euo pipefail
 
 # ─── Skills Reloaded Installer ────────────────────────────────────────────────
 # Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode
-# Usage: curl -fsSL https://raw.githubusercontent.com/sleli/skills-reloaded/main/install.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main/install.sh | bash
 # ──────────────────────────────────────────────────────────────────────────────
 
-REPO_BASE="https://raw.githubusercontent.com/sleli/skills-reloaded/main"
+REPO_BASE="https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main"
 SKILL_NAMES=("explore-context" "create-skills" "create-agents")
 
 # ─── Colors ───────────────────────────────────────────────────────────────────

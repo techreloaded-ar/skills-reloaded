@@ -1,11 +1,11 @@
 # ─── Skills Reloaded Installer ────────────────────────────────────────────────
 # Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode
-# Usage: irm https://raw.githubusercontent.com/sleli/skills-reloaded/main/install.ps1 | iex
+# Usage: irm https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main/install.ps1 | iex
 # ──────────────────────────────────────────────────────────────────────────────
 
 $ErrorActionPreference = "Stop"
 
-$RepoBase = "https://raw.githubusercontent.com/sleli/skills-reloaded/main"
+$RepoBase = "https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main"
 $SkillNames = @("explore-context", "create-skills", "create-agents")
 
 # ─── Tool definitions ────────────────────────────────────────────────────────
