@@ -88,7 +88,7 @@ function Remove-Legacy {
 
 # ─── Interactive multi-select menu ────────────────────────────────────────────
 function Show-Menu {
-    $selected = @(0, 0, 0, 0) # none selected by default
+    $selected = @(0, 0, 0, 0, 0) # none selected by default
     $cursor = 0
     $toolCount = $Tools.Count
 
