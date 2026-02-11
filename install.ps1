@@ -14,6 +14,7 @@ $Tools = @(
     @{ Name = "Codex";       Path = Join-Path "." ".agents\skills" }
     @{ Name = "Gemini CLI";  Path = Join-Path "." ".gemini\skills" }
     @{ Name = "OpenCode";    Path = Join-Path "." ".opencode\skills" }
+    @{ Name = "Generic / Other"; Path = Join-Path "." ".skills-reloaded\skills" }
 )
 
 # ─── Legacy paths for cleanup ────────────────────────────────────────────────
@@ -22,6 +23,7 @@ $OldTools = @(
     @{ Path = Join-Path "." ".codex\prompts";              Ext = "md" }
     @{ Path = Join-Path "." ".gemini\commands";            Ext = "toml" }
     @{ Path = Join-Path "." ".config\opencode\commands";   Ext = "md" }
+    @{ Path = ""; Ext = "" }
 )
 $OldNames = @("explore-context", "create-skills", "create-agents", "update-skills")
 
@@ -57,6 +59,12 @@ function Remove-Legacy {
 
     $old = $OldTools[$ToolIndex]
     $oldPath = $old.Path
+    
+    # Skip se il path è vuoto (per nuove opzioni senza legacy)
+    if ([string]::IsNullOrWhiteSpace($oldPath)) {
+        return
+    }
+    
     $ext = $old.Ext
     $removed = 0
 

@@ -19,13 +19,13 @@ DIM='\033[2m'
 RESET='\033[0m'
 
 # ─── Tool definitions ────────────────────────────────────────────────────────
-TOOL_NAMES=("Claude Code" "Codex" "Gemini CLI" "OpenCode")
-TOOL_PATHS=(".claude/skills" ".agents/skills" ".gemini/skills" ".opencode/skills")
+TOOL_NAMES=("Claude Code" "Codex" "Gemini CLI" "OpenCode" "Generic / Other")
+TOOL_PATHS=(".claude/skills" ".agents/skills" ".gemini/skills" ".opencode/skills" ".skills-reloaded/skills")
 TOOL_COUNT=${#TOOL_NAMES[@]}
 
 # ─── Legacy paths for cleanup ────────────────────────────────────────────────
-OLD_TOOL_PATHS=(".claude/commands" ".codex/prompts" ".gemini/commands" ".config/opencode/commands")
-OLD_EXTENSIONS=("md" "md" "toml" "md")
+OLD_TOOL_PATHS=(".claude/commands" ".codex/prompts" ".gemini/commands" ".config/opencode/commands" "")
+OLD_EXTENSIONS=("md" "md" "toml" "md" "")
 OLD_NAMES=("explore-context" "create-skills" "create-agents" "update-skills")
 
 # ─── Cleanup ──────────────────────────────────────────────────────────────────
@@ -58,6 +58,12 @@ install_for_tool() {
 cleanup_legacy() {
   local tool_index="$1"
   local old_path="${OLD_TOOL_PATHS[$tool_index]}"
+  
+  # Skip se il path è vuoto (per nuove opzioni senza legacy)
+  if [[ -z "$old_path" ]]; then
+    return
+  fi
+  
   local ext="${OLD_EXTENSIONS[$tool_index]}"
   local removed=0
 
