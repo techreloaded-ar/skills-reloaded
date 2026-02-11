@@ -44,7 +44,7 @@ Open **PowerShell** in your target project directory and run:
 cd C:\path\to\your\project
 
 # Download and run the installer
-irm https://github.com/techreloaded-ar/skills-reloaded/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main/install.ps1 | iex
 ```
 
 **Mac/Linux** Open **Terminal** in your target project directory and run:
