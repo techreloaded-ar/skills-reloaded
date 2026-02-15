@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ─── Skills Reloaded Installer ────────────────────────────────────────────────
-# Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode
+# Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode, GitHub Copilot
 # Usage: curl -fsSL https://raw.githubusercontent.com/sleli/skills-reloaded/main/install.sh | bash
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -19,8 +19,8 @@ DIM='\033[2m'
 RESET='\033[0m'
 
 # ─── Tool definitions ────────────────────────────────────────────────────────
-TOOL_NAMES=("Claude Code" "Codex" "Gemini CLI" "OpenCode")
-TOOL_PATHS=(".claude/skills" ".agents/skills" ".gemini/skills" ".opencode/skills")
+TOOL_NAMES=("Claude Code" "Codex" "Gemini CLI" "OpenCode" "GitHub Copilot")
+TOOL_PATHS=(".claude/skills" ".agents/skills" ".gemini/skills" ".opencode/skills" ".github/skills")
 TOOL_COUNT=${#TOOL_NAMES[@]}
 
 # ─── Legacy paths for cleanup ────────────────────────────────────────────────

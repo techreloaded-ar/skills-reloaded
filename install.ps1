@@ -1,5 +1,5 @@
 # ─── Skills Reloaded Installer ────────────────────────────────────────────────
-# Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode
+# Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode, GitHub Copilot
 # Usage: irm https://raw.githubusercontent.com/sleli/skills-reloaded/main/install.ps1 | iex
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -14,6 +14,7 @@ $Tools = @(
     @{ Name = "Codex";       Path = Join-Path "." ".agents\skills" }
     @{ Name = "Gemini CLI";  Path = Join-Path "." ".gemini\skills" }
     @{ Name = "OpenCode";    Path = Join-Path "." ".opencode\skills" }
+    @{ Name = "GitHub Copilot"; Path = Join-Path "." ".github\skills" }
 )
 
 # ─── Legacy paths for cleanup ────────────────────────────────────────────────
@@ -80,7 +81,7 @@ function Remove-Legacy {
 
 # ─── Interactive multi-select menu ────────────────────────────────────────────
 function Show-Menu {
-    $selected = @(0, 0, 0, 0) # none selected by default
+    $selected = @(0, 0, 0, 0, 0) # none selected by default
     $cursor = 0
     $toolCount = $Tools.Count
 

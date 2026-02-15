@@ -51,10 +51,11 @@ Determine where to save generated skill files by setting one or more `SKILLS_OUT
    | Codex | `.agents/skills/` |
    | Gemini CLI | `.gemini/skills/` |
    | OpenCode | `.opencode/skills/` |
+   | GitHub Copilot | `.github/skills/` |
 
    If you can identify your environment → use the corresponding path and proceed to Step 1.
 
-2. **Directory check**: If unsure, check which of these directories exist in the project root: `.claude/`, `.agents/`, `.gemini/`, `.opencode/`. If exactly one exists → use the corresponding platform's skills path.
+2. **Directory check**: If unsure, check which of these directories exist in the project root: `.claude/`, `.agents/`, `.gemini/`, `.opencode/`, `.github/`. If exactly one exists → use the corresponding platform's skills path.
 
 3. **Ask the user**: If detection fails or multiple directories found, ask:
    "In quale ambiente vuoi generare i file? (selezione multipla possibile)"
@@ -62,6 +63,7 @@ Determine where to save generated skill files by setting one or more `SKILLS_OUT
    - Codex (`.agents/skills/`)
    - Gemini CLI (`.gemini/skills/`)
    - OpenCode (`.opencode/skills/`)
+   - GitHub Copilot (`.github/skills/`)
    - Altro (`.skills-reloaded/skills/`)
 
    If multiple selected → generate files in ALL selected directories.

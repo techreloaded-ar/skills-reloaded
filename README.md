@@ -18,7 +18,7 @@ The framework operates through a three-phase workflow that progressively builds 
 Analyzes your codebase and documents technical areas and business contexts using Domain-Driven Design principles. Run this first.
 
 ### 2. `create-skills`
-Generates executable skills from discovered contexts and **installs** them to your AI tool. Detects Claude Code, OpenCode, Codex, or Gemini CLI automatically. If it can't detect your tool, you'll be prompted to choose.
+Generates executable skills from discovered contexts and **installs** them to your AI tool. Detects Claude Code, OpenCode, Codex, Gemini CLI, or GitHub Copilot automatically. If it can't detect your tool, you'll be prompted to choose.
 
 ### 3. `create-agents`
 Creates an orchestrator and specialized sub-agents for your tech stack, then **installs** them to your AI tool. Same auto-detection as `create-skills`.
@@ -33,6 +33,7 @@ The installation process uses automated scripts to download and install the skil
 - **OpenCode** (`.opencode/skills/`)
 - **Codex** (`.agents/skills/`)
 - **Gemini CLI** (`.gemini/skills/`)
+- **GitHub Copilot** (`.github/skills/`)
 
 ### Installation
 
@@ -97,6 +98,9 @@ ls .agents/skills/
 
 # Gemini CLI
 ls .gemini/skills/
+
+# GitHub Copilot
+ls .github/skills/
 ```
 
 You should see: `create-agents`, `create-skills`, `explore-context`
@@ -137,10 +141,11 @@ If your codebase changes significantly, you can re-run the analysis:
 The `create-skills` and `create-agents` skills automatically install generated files into your AI tool's directory structure. The skills are ready to use immediately after generation.
 
 **Automatic Installation Paths:**
-- **Claude Code**: `.claude/skills/` 
+- **Claude Code**: `.claude/skills/`
 - **OpenCode**: `.opencode/skills/`
 - **Codex**: `.agents/skills/`
 - **Gemini CLI**: `.gemini/skills/`
+- **GitHub Copilot**: `.github/skills/`
 
 
 ## Key Features

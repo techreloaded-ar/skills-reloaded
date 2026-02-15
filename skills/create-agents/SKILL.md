@@ -18,10 +18,11 @@ Determine where to save generated agent files by setting one or more `AGENTS_OUT
    | Codex | `.agents/agents/` |
    | Gemini CLI | `.gemini/agents/` |
    | OpenCode | `.opencode/agents/` |
+   | GitHub Copilot | `.github/agents/` |
 
    If you can identify your environment → use the corresponding path and proceed to Section 1.
 
-2. **Directory check**: If unsure, check which of these directories exist in the project root: `.claude/`, `.agents/`, `.gemini/`, `.opencode/`. If exactly one exists → use the corresponding platform's agents path.
+2. **Directory check**: If unsure, check which of these directories exist in the project root: `.claude/`, `.agents/`, `.gemini/`, `.opencode/`, `.github/`. If exactly one exists → use the corresponding platform's agents path.
 
 3. **Ask the user**: If detection fails or multiple directories found, ask:
    "In quale ambiente vuoi generare i file? (selezione multipla possibile)"
@@ -29,6 +30,7 @@ Determine where to save generated agent files by setting one or more `AGENTS_OUT
    - Codex (`.agents/agents/`)
    - Gemini CLI (`.gemini/agents/`)
    - OpenCode (`.opencode/agents/`)
+   - GitHub Copilot (`.github/agents/`)
    - Altro (`.skills-reloaded/agents/`)
 
    If multiple selected → generate files in ALL selected directories.
