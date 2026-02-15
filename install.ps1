@@ -1,11 +1,12 @@
 # ─── Skills Reloaded Installer ────────────────────────────────────────────────
-# Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode, GitHub Copilot
-# Usage: irm https://raw.githubusercontent.com/sleli/skills-reloaded/main/install.ps1 | iex
+<<<<<<< HEAD
+# Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode, GitHub Copilot, Generic / Other
+# Usage: irm https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main/install.ps1 | iex
 # ──────────────────────────────────────────────────────────────────────────────
 
 $ErrorActionPreference = "Stop"
 
-$RepoBase = "https://raw.githubusercontent.com/sleli/skills-reloaded/main"
+$RepoBase = "https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main"
 $SkillNames = @("explore-context", "create-skills", "create-agents")
 
 # ─── Tool definitions ────────────────────────────────────────────────────────
@@ -15,6 +16,7 @@ $Tools = @(
     @{ Name = "Gemini CLI";  Path = Join-Path "." ".gemini\skills" }
     @{ Name = "OpenCode";    Path = Join-Path "." ".opencode\skills" }
     @{ Name = "GitHub Copilot"; Path = Join-Path "." ".github\skills" }
+    @{ Name = "Generic / Other"; Path = Join-Path "." ".skills-reloaded\skills" }
 )
 
 # ─── Legacy paths for cleanup ────────────────────────────────────────────────
@@ -23,6 +25,7 @@ $OldTools = @(
     @{ Path = Join-Path "." ".codex\prompts";              Ext = "md" }
     @{ Path = Join-Path "." ".gemini\commands";            Ext = "toml" }
     @{ Path = Join-Path "." ".config\opencode\commands";   Ext = "md" }
+    @{ Path = ""; Ext = "" }
 )
 $OldNames = @("explore-context", "create-skills", "create-agents", "update-skills")
 
@@ -58,6 +61,12 @@ function Remove-Legacy {
 
     $old = $OldTools[$ToolIndex]
     $oldPath = $old.Path
+    
+    # Skip se il path è vuoto (per nuove opzioni senza legacy)
+    if ([string]::IsNullOrWhiteSpace($oldPath)) {
+        return
+    }
+    
     $ext = $old.Ext
     $removed = 0
 

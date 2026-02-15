@@ -2,11 +2,13 @@
 set -euo pipefail
 
 # ─── Skills Reloaded Installer ────────────────────────────────────────────────
-# Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode, GitHub Copilot
-# Usage: curl -fsSL https://raw.githubusercontent.com/sleli/skills-reloaded/main/install.sh | bash
+<<<<<<< HEAD
+# ─── Skills Reloaded Installer ────────────────────────────────────────────────
+# Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode, GitHub Copilot, Generic / Other
+# Usage: curl -fsSL https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main/install.sh | bash
 # ──────────────────────────────────────────────────────────────────────────────
 
-REPO_BASE="https://raw.githubusercontent.com/sleli/skills-reloaded/main"
+REPO_BASE="https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main"
 SKILL_NAMES=("explore-context" "create-skills" "create-agents")
 
 # ─── Colors ───────────────────────────────────────────────────────────────────
@@ -19,13 +21,12 @@ DIM='\033[2m'
 RESET='\033[0m'
 
 # ─── Tool definitions ────────────────────────────────────────────────────────
-TOOL_NAMES=("Claude Code" "Codex" "Gemini CLI" "OpenCode" "GitHub Copilot")
-TOOL_PATHS=(".claude/skills" ".agents/skills" ".gemini/skills" ".opencode/skills" ".github/skills")
-TOOL_COUNT=${#TOOL_NAMES[@]}
+TOOL_NAMES=("Claude Code" "Codex" "Gemini CLI" "OpenCode" "GitHub Copilot" "Generic / Other")
+TOOL_PATHS=(".claude/skills" ".agents/skills" ".gemini/skills" ".opencode/skills" ".github/skills" ".skills-reloaded/skills")
 
 # ─── Legacy paths for cleanup ────────────────────────────────────────────────
-OLD_TOOL_PATHS=(".claude/commands" ".codex/prompts" ".gemini/commands" ".config/opencode/commands")
-OLD_EXTENSIONS=("md" "md" "toml" "md")
+OLD_TOOL_PATHS=(".claude/commands" ".codex/prompts" ".gemini/commands" ".config/opencode/commands" "")
+OLD_EXTENSIONS=("md" "md" "toml" "md" "")
 OLD_NAMES=("explore-context" "create-skills" "create-agents" "update-skills")
 
 # ─── Cleanup ──────────────────────────────────────────────────────────────────
@@ -58,6 +59,12 @@ install_for_tool() {
 cleanup_legacy() {
   local tool_index="$1"
   local old_path="${OLD_TOOL_PATHS[$tool_index]}"
+  
+  # Skip se il path è vuoto (per nuove opzioni senza legacy)
+  if [[ -z "$old_path" ]]; then
+    return
+  fi
+  
   local ext="${OLD_EXTENSIONS[$tool_index]}"
   local removed=0
 

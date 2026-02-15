@@ -45,7 +45,7 @@ Open **PowerShell** in your target project directory and run:
 cd C:\path\to\your\project
 
 # Download and run the installer
-irm https://raw.githubusercontent.com/sleli/skills-reloaded/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main/install.ps1 | iex
 ```
 
 **Mac/Linux** Open **Terminal** in your target project directory and run:
@@ -55,7 +55,7 @@ irm https://raw.githubusercontent.com/sleli/skills-reloaded/main/install.ps1 | i
 cd /path/to/your/project
 
 # Download and run the installer
-curl -fsSL https://raw.githubusercontent.com/sleli/skills-reloaded/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main/install.sh | bash
 ```
 
 **The installer will:**
@@ -71,7 +71,7 @@ If you prefer to install manually or the automated installer doesn't work:
 
 ```bash
 # Clone the repository
-git clone https://github.com/sleli/skills-reloaded.git
+git clone https://github.com/techreloaded-ar/skills-reloaded.git
 cd skills-reloaded
 
 # Run the install script
