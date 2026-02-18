@@ -123,25 +123,57 @@ Create NotificationService: interface + implementation supporting create, type f
 
 Read and parse `.skills-reloaded/contexts/TECHNICAL-AREAS.md`.
 
-**For each Technical Area:**
-1. Extract all information, guidelines, and context for that area.
-2. **Filename**: Use a professional role name (e.g., `nextjs-dev.md`, NOT `nextjs.md`). For each `AGENTS_OUTPUT_BASE`, create `{AGENTS_OUTPUT_BASE}[profession-name].md`.
+### 3.1 Design the Team — Think Like a Tech Lead Hiring for a Real Project
+
+Before creating any file, reason about the team composition as a **Tech Lead staffing a new project team**.
+
+Your goal is NOT to create one agent per technical area. Instead, **group related technical areas into broader, well-rounded professional roles** — the same way a real hiring manager would staff a small, high-performing team.
+
+**Constraints:**
+- Create **at most 6 agents** (5–6 is the sweet spot; fewer is better than more).
+- Each agent must cover **multiple related technical areas**, not a single narrow skill.
+- Agent names must be **professional role titles** (e.g., "Full-Stack Developer", "DevOps Engineer"), not technology names (NOT "React Agent" or "PostgreSQL Expert").
+- Each agent must be **genuinely useful across many tasks**, not hyper-specialized to a single framework or tool.
+
+**How to group:**
+- Merge frontend technologies (UI frameworks, styling, state management, routing, etc.) into one or two broad roles.
+- Merge backend technologies (APIs, business logic, services, background jobs, etc.) into one role.
+- Merge data concerns (databases, ORM, migrations, queries, caching) into one role.
+- Merge infrastructure/platform concerns (CI/CD, deployment, containerization, cloud) into one role.
+- Add a QA/Testing role only if testing is a significant area in the codebase.
+- Add a cross-cutting role (security, architecture, code quality) only if clearly warranted.
+
+**Before writing any files**, output a short team design summary:
+```
+## Proposed Team Composition
+- [Role Name]: covers [Area1, Area2, Area3, ...]
+- [Role Name]: covers [Area4, Area5, ...]
+...
+```
+This makes the grouping reasoning visible and reviewable.
+
+### 3.2 Create Agent Files
+
+For each role in the proposed team composition:
+
+1. Collect all technical details, guidelines, and context from the relevant areas in `TECHNICAL-AREAS.md`.
+2. **Filename**: Use a professional role name (e.g., `fullstack-developer.md`, NOT `react.md`). For each `AGENTS_OUTPUT_BASE`, create `{AGENTS_OUTPUT_BASE}[role-name].md`.
 3. **Template**:
     ```markdown
     ---
-    name: {{agent_name — Professional Name, e.g. "Next.js Developer"}}
-    description: {{agent_description, including when to use this agent}}
+    name: {{agent_name — Professional Role Title, e.g. "Full-Stack Developer"}}
+    description: {{agent_description — explain the breadth of responsibilities and when to use this agent}}
     ---
 
     You are a **{{agent_name}}**.
 
     # Role
-    {{role_description}}
+    {{role_description — describe the full scope of the role, not just one technology}}
 
     # Capabilities
-    {{capabilities_bullet_list}}
+    {{capabilities_bullet_list — cover all technical areas this agent is responsible for}}
 
     # Rules & Guidelines
-    {{rules_bullet_list}}
+    {{rules_bullet_list — include guidelines from all merged technical areas}}
     ```
-4. Create the file with all relevant technical details, patterns, and context from `TECHNICAL-AREAS.md`.
+4. Create the file consolidating all relevant technical details, patterns, and context from `TECHNICAL-AREAS.md` for the merged areas.
