@@ -1,5 +1,4 @@
 # ─── Skills Reloaded Installer ────────────────────────────────────────────────
-<<<<<<< HEAD
 # Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode, GitHub Copilot, Generic / Other
 # Usage: irm https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main/install.ps1 | iex
 # ──────────────────────────────────────────────────────────────────────────────
