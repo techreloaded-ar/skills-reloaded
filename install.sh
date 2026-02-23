@@ -2,7 +2,6 @@
 set -euo pipefail
 
 # ─── Skills Reloaded Installer ────────────────────────────────────────────────
-<<<<<<< HEAD
 # ─── Skills Reloaded Installer ────────────────────────────────────────────────
 # Installs skills-reloaded skills for Claude Code, Codex, Gemini CLI, OpenCode, GitHub Copilot, Generic / Other
 # Usage: curl -fsSL https://raw.githubusercontent.com/techreloaded-ar/skills-reloaded/main/install.sh | bash
