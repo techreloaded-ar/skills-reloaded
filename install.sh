@@ -22,10 +22,11 @@ RESET='\033[0m'
 # ─── Tool definitions ────────────────────────────────────────────────────────
 TOOL_NAMES=("Claude Code" "Codex" "Gemini CLI" "OpenCode" "GitHub Copilot" "Generic / Other")
 TOOL_PATHS=(".claude/skills" ".agents/skills" ".gemini/skills" ".opencode/skills" ".github/skills" ".skills-reloaded/skills")
+TOOL_COUNT=${#TOOL_NAMES[@]}
 
 # ─── Legacy paths for cleanup ────────────────────────────────────────────────
-OLD_TOOL_PATHS=(".claude/commands" ".codex/prompts" ".gemini/commands" ".config/opencode/commands" "")
-OLD_EXTENSIONS=("md" "md" "toml" "md" "")
+OLD_TOOL_PATHS=(".claude/commands" ".codex/prompts" ".gemini/commands" ".config/opencode/commands" "" "")
+OLD_EXTENSIONS=("md" "md" "toml" "md" "" "")
 OLD_NAMES=("explore-context" "create-skills" "create-agents" "update-skills")
 
 # ─── Cleanup ──────────────────────────────────────────────────────────────────
@@ -91,7 +92,7 @@ interactive_menu() {
   local cursor=0
 
   for ((i = 0; i < TOOL_COUNT; i++)); do
-    selected+=(1) # all selected by default
+    selected+=(0) # all deselected by default
   done
 
   # Reconnect stdin from tty for pipe mode (curl | bash)
